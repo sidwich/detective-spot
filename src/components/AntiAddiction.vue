@@ -40,11 +40,11 @@
         </p>
         
         <div class="auth-buttons">
-          <button class="btn-primary" @click="startAuth">
+          <button class="btn-primary" @click="handleStartAuth">
             <span>👤</span> 微信一键实名
           </button>
           
-          <button class="btn-secondary" @click="playAsGuest">
+          <button class="btn-secondary" @click="handlePlayAsGuest">
             <span>👤</span> 游客试玩（限时15分钟）
           </button>
         </div>
@@ -65,7 +65,7 @@
         <h3>游戏时间已用完</h3>
         <p>您今日的游戏时间已达到上限，请明日再玩。</p>
         
-        <button class="btn-primary" @click="exitGame">退出游戏</button>
+        <button class="btn-primary" @click="handleExitGame">退出游戏</button>
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { isWechat, setStorage, getStorage, showToast, exitMiniProgram } from './wechat';
+import { isWechat, setStorage, getStorage, showToast, exitMiniProgram } from '../platform/wechat';
 
 const showDialog = ref(false);
 const isAdult = ref(false);
@@ -128,14 +128,14 @@ function checkAuth() {
     const hour = new Date().getHours();
     if (hour >= 22 || hour < 8) {
       showToast('每日22:00-次日8:00无法游戏', 'none');
-      exitGame();
+      handleExitGame();
       return;
     }
   }
 }
 
 // 开始实名认证
-function startAuth() {
+function handleStartAuth() {
   if (!isWechat) {
     // 非微信环境，模拟认证
     mockAuth();
@@ -178,7 +178,7 @@ function mockAuth() {
 }
 
 // 游客试玩
-function playAsGuest() {
+function handlePlayAsGuest() {
   const authInfo = {
     age: 16, // 标记为未成年人
     isGuest: true,
@@ -197,14 +197,14 @@ function confirm() {
 }
 
 // 退出游戏
-function exitGame() {
+function handleExitGame() {
   exitMiniProgram();
 }
 
 // 记录游戏时长
 let playTimer: number | null = null;
 
-export function startPlayTimeTracking() {
+function startPlayTimeTracking() {
   if (playTimer) return;
   
   playTimer = window.setInterval(() => {
@@ -231,7 +231,7 @@ export function startPlayTimeTracking() {
   }, 60000); // 每分钟记录一次
 }
 
-export function stopPlayTimeTracking() {
+function stopPlayTimeTracking() {
   if (playTimer) {
     clearInterval(playTimer);
     playTimer = null;

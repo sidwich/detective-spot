@@ -22,7 +22,10 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from './stores/gameStore';
 import { isWechat, showShareMenu, checkForUpdate, onMemoryWarning } from './platform/wechat';
 import { handleShareEntry, parseShareQuery } from './platform/share';
-import { startPlayTimeTracking, stopPlayTimeTracking } from './components/AntiAddiction.vue';
+import {
+  startPlayTimeTracking,
+  stopPlayTimeTracking,
+} from './composables/useAntiAddiction';
 
 import MainMenu from './components/MainMenu.vue';
 import LevelSelect from './components/LevelSelect.vue';
