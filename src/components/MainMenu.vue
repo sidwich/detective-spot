@@ -149,14 +149,22 @@ const showSettings = ref(false);
 const showResetConfirm = ref(false);
 
 // 计算属性
-const hasProgress = computed(() => gameStore.getCompletedCount > 0);
-const completedCount = computed(() => gameStore.getCompletedCount);
+const hasProgress = computed(() => gameStore.completedLevels.length > 0);
+const completedCount = computed(() => gameStore.completedLevels.length);
 const totalLevels = computed(() => gameStore.totalLevels);
-const progressPercent = computed(() => gameStore.getTotalProgress);
-const nextLevel = computed(() => gameStore.getNextLevel || 1);
-const totalStars = computed(() => Object.values(gameStore.progress.levelStars).reduce((a, b) => a + b, 0));
-const totalScore = computed(() => gameStore.progress.totalScore);
-const settings = computed(() => gameStore.settings);
+const progressPercent = computed(() => Math.round((completedCount.value / totalLevels.value) * 100));
+const nextLevel = computed(() => {
+  if (gameStore.completedLevels.length === 0) return 1;
+  const maxCompleted = Math.max(...gameStore.completedLevels);
+  return Math.min(maxCompleted + 1, gameStore.totalLevels);
+});
+const totalStars = computed(() => Object.values(gameStore.levelStars).reduce((a: number, b: number) => a + b, 0));
+const totalScore = computed(() => totalStars.value * 100);
+const settings = computed(() => ({
+  soundEnabled: gameStore.soundEnabled,
+  musicEnabled: gameStore.musicEnabled,
+  vibrationEnabled: true,
+}));
 
 // 方法
 const startNewGame = () => {
@@ -171,7 +179,7 @@ const continueGame = () => {
 
 const goToLevelSelect = () => {
   soundManager.playClick();
-  gameStore.setScene('levelSelect');
+  gameStore.setScene('level-select');
 };
 
 const toggleSound = () => {

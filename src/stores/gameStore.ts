@@ -12,6 +12,7 @@ interface SaveData {
   totalHints: number;
   soundEnabled: boolean;
   musicEnabled: boolean;
+  vibrationEnabled: boolean;
 }
 
 export const useGameStore = defineStore('game', () => {
@@ -35,6 +36,7 @@ export const useGameStore = defineStore('game', () => {
   const totalHints = ref(10);
   const soundEnabled = ref(true);
   const musicEnabled = ref(true);
+  const vibrationEnabled = ref(true);
 
   // 计算属性
   const getCurrentLevel = computed(() => {
@@ -65,6 +67,7 @@ export const useGameStore = defineStore('game', () => {
         totalHints.value = data.totalHints ?? 10;
         soundEnabled.value = data.soundEnabled ?? true;
         musicEnabled.value = data.musicEnabled ?? true;
+        vibrationEnabled.value = data.vibrationEnabled ?? true;
       }
     } catch (e) {
       console.warn('Failed to load save data:', e);
@@ -81,6 +84,7 @@ export const useGameStore = defineStore('game', () => {
         totalHints: totalHints.value,
         soundEnabled: soundEnabled.value,
         musicEnabled: musicEnabled.value,
+        vibrationEnabled: vibrationEnabled.value,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
@@ -100,6 +104,47 @@ export const useGameStore = defineStore('game', () => {
 
   const goToSettings = () => {
     currentView.value = 'settings';
+  };
+
+  // 开始新游戏（从第一关）
+  const startNewGame = () => {
+    currentLevel.value = 1;
+    currentView.value = 'game';
+    isPlaying.value = true;
+    isPaused.value = false;
+  };
+
+  // 继续游戏（从下一关）
+  const continueGame = () => {
+    const nextLevelId = completedLevels.value.length > 0 
+      ? Math.max(...completedLevels.value) + 1 
+      : 1;
+    currentLevel.value = Math.min(nextLevelId, totalLevels.value);
+    currentView.value = 'game';
+    isPlaying.value = true;
+    isPaused.value = false;
+  };
+
+  // 通用场景切换
+  const setScene = (scene: 'menu' | 'level-select' | 'game' | 'settings') => {
+    currentView.value = scene;
+    if (scene !== 'game') {
+      isPlaying.value = false;
+    }
+  };
+
+  // 更新设置
+  const updateSettings = (settings: Partial<{ soundEnabled: boolean; musicEnabled: boolean; vibrationEnabled: boolean }>) => {
+    if (settings.soundEnabled !== undefined) {
+      soundEnabled.value = settings.soundEnabled;
+    }
+    if (settings.musicEnabled !== undefined) {
+      musicEnabled.value = settings.musicEnabled;
+    }
+    if (settings.vibrationEnabled !== undefined) {
+      vibrationEnabled.value = settings.vibrationEnabled;
+    }
+    saveToStorage();
   };
 
   // 游戏方法
@@ -206,6 +251,7 @@ export const useGameStore = defineStore('game', () => {
     totalHints,
     soundEnabled,
     musicEnabled,
+    vibrationEnabled,
     levelsData,
     
     // 计算属性
@@ -218,6 +264,10 @@ export const useGameStore = defineStore('game', () => {
     goToMenu,
     goToLevelSelect,
     goToSettings,
+    startNewGame,
+    continueGame,
+    setScene,
+    updateSettings,
     startLevel,
     completeLevel,
     nextLevel,
