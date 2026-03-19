@@ -72,6 +72,11 @@
           <span class="btn-icon">⚙️</span>
           <span class="btn-text">设置</span>
         </button>
+        
+        <button class="menu-btn btn-share" @click="handleShare">
+          <span class="btn-icon">📤</span>
+          <span class="btn-text">邀请好友</span>
+        </button>
       </div>
       
       <!-- 版本信息 -->
@@ -137,6 +142,7 @@
 import { ref, computed } from 'vue';
 import { useGameStore } from '../stores/gameStore';
 import { soundManager } from '../game/SoundManager';
+import { shareToFriend, inviteFriends, generateShareImage } from '../platform/share';
 
 const gameStore = useGameStore();
 const showSettings = ref(false);
@@ -197,6 +203,20 @@ const resetProgress = () => {
   soundManager.playClick();
   gameStore.resetProgress();
   showResetConfirm.value = false;
+};
+
+const handleShare = async () => {
+  soundManager.playClick();
+  
+  // 生成分享图
+  const shareImage = await generateShareImage({
+    level: nextLevel.value,
+    stars: totalStars.value,
+    score: totalScore.value,
+  });
+  
+  // 调用分享
+  inviteFriends();
 };
 </script>
 
