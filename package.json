@@ -1,11 +1,11 @@
 {
   "name": "detective-spot",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "找茬侦探社 - H5找茬解谜游戏",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,8 +15,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.8",
-    "vue-tsc": "^2.0.11"
+    "vite": "^5.2.8"
   }
 }

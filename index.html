@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>找茬侦探社</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      background: #1a1a2e; 
+    html, body { 
+      width: 100%; 
+      height: 100%; 
       overflow: hidden;
-      touch-action: none;
+      background: #0d0d1a;
     }
-    #app { width: 100vw; height: 100vh; }
+    #app { width: 100%; height: 100%; }
+    /* 防止移动端默认行为 */
+    body {
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
   </style>
 </head>
 <body>

@@ -1,22 +1,25 @@
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
-      <div class="icon">😅</div>
+      <div class="fail-icon">😅</div>
       
       <h2>时间到！</h2>
+      
       <p class="message">别气馁，再仔细观察一下~🔍</p>
+      
+      <div class="tip-box">
+        <div class="tip-icon">💡</div>
+        <p>提示：使用 🔍 按钮可以获得线索！</p>
+      </div>
       
       <div class="buttons">
         <button class="btn-primary" @click="$emit('retry')">
-          再试一次 💪
+          <span>💪</span> 再试一次
         </button>
-        <button class="btn-secondary" @click="$emit('back')"
-          返回主页 🏠
+
+        <button class="btn-secondary" @click="$emit('back')">
+          <span>🏠</span> 返回主页
         </button>
-      </div>
-      
-      <div class="share-hint">
-        💡 分享给好友，可获得一次提示机会！
       </div>
     </div>
   </div>
@@ -28,22 +31,23 @@ defineEmits(['retry', 'back']);
 
 <style scoped>
 .modal-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .modal-content {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border: 2px solid #666;
-  border-radius: 20px;
-  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 24px;
+  padding: 2.5rem;
   text-align: center;
-  min-width: 300px;
+  min-width: 320px;
   animation: shake 0.5s ease-out;
 }
 
@@ -53,13 +57,20 @@ defineEmits(['retry', 'back']);
   40%, 80% { transform: translateX(10px); }
 }
 
-.icon {
+.fail-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
+  animation: bounce 1s ease-in-out infinite;
 }
 
-h2 {
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.modal-content h2 {
   color: #ff6b6b;
+  font-size: 1.8rem;
   margin-bottom: 0.5rem;
 }
 
@@ -68,50 +79,72 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
-.buttons {
+.tip-box {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
-button {
-  padding: 0.75rem 1.5rem;
+.tip-icon {
+  font-size: 1.5rem;
+}
+
+.tip-box p {
+  color: #fbbf24;
+  font-size: 0.9rem;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.buttons button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 25px;
+  border-radius: 12px;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
 
 .btn-primary {
-  background: #ff6b6b;
+  background: linear-gradient(135deg, #ff6b6b, #ef4444);
   color: white;
   font-weight: bold;
 }
 
 .btn-primary:hover {
-  background: #ff8585;
-  transform: scale(1.05);
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
 .btn-secondary {
-  background: transparent;
-  border: 2px solid #666;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #888;
 }
 
 .btn-secondary:hover {
-  border-color: #888;
+  background: rgba(255, 255, 255, 0.1);
   color: #aaa;
 }
 
-.share-hint {
-  font-size: 0.85rem;
-  color: #d4a574;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background: rgba(212, 165, 116, 0.1);
-  border-radius: 10px;
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 1rem;
+    padding: 2rem;
+  }
 }
 </style>
